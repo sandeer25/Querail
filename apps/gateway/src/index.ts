@@ -8,12 +8,12 @@ async function start() {
     validateConfig();
 
     // Initialize database
-    console.log('🔄 Initializing database...');
+    console.log('Initializing database...');
     initDatabase(config.databaseUrl);
-    console.log('✅ Database initialized');
+    console.log('Database initialized');
 
     // Build and start server
-    console.log('🔄 Starting server...');
+    console.log('Starting server...');
     const server = await buildServer();
 
     await server.listen({
@@ -21,11 +21,11 @@ async function start() {
       host: '0.0.0.0',
     });
 
-    console.log(`✅ Server running on http://localhost:${config.port}`);
-    console.log(`📊 Environment: ${config.env}`);
+    console.log(`Server running on http://localhost:${config.port}`);
+    console.log(`Environment: ${config.env}`);
 
   } catch (error) {
-    console.error('❌ Failed to start server:', error);
+    console.error('Failed to start server:', error);
     process.exit(1);
   }
 }

@@ -1,7 +1,7 @@
-import { FastifyRequest, FastifyReply } from 'fastify';
-import { getDatabase } from '@ai-control/database';
-import { ApiKeysRepository } from '@ai-control/database';
-import { AuthenticatedRequest } from '../types';
+import { FastifyRequest, FastifyReply } from "fastify";
+import { getDatabase } from "@ai-control/database";
+import { ApiKeysRepository } from "@ai-control/database";
+import { AuthenticatedRequest } from "../types";
 
 export async function authMiddleware(
   request: FastifyRequest,
@@ -11,18 +11,18 @@ export async function authMiddleware(
 
   if (!authHeader) {
     return reply.status(401).send({
-      error: 'Unauthorized',
-      message: 'Missing Authorization header',
+      error: "Unauthorized",
+      message: "Missing Authorization header",
     });
   }
 
   // Extract API key from "Bearer <key>" format
-  const apiKey = authHeader.replace('Bearer ', '').trim();
+  const apiKey = authHeader.replace("Bearer ", "").trim();
 
-  if (!apiKey.startsWith('sk-')) {
+  if (!apiKey.startsWith("sk-")) {
     return reply.status(401).send({
-      error: 'Unauthorized',
-      message: 'Invalid API key format',
+      error: "Unauthorized",
+      message: "Invalid API key format",
     });
   }
 
@@ -34,8 +34,8 @@ export async function authMiddleware(
 
     if (!keyData) {
       return reply.status(401).send({
-        error: 'Unauthorized',
-        message: 'Invalid API key',
+        error: "Unauthorized",
+        message: "Invalid API key",
       });
     }
 
@@ -44,15 +44,20 @@ export async function authMiddleware(
     (request as AuthenticatedRequest).apiKeyId = keyData.id;
 
     // Update last used timestamp (async, don't await)
-    apiKeysRepo.updateLastUsed(keyData.id).catch(err => {
-      console.error('Failed to update API key last used:', err);
+    apiKeysRepo.updateLastUsed(keyData.id).catch((err) => {
+      console.error("Failed to update API key last used:", err);
     });
-
-  } catch (error) {
-    console.error('Auth middleware error:', error);
+    
+  } catch (error: any) {
+    console.error("Auth middleware error:", error);
+    console.error("Error details:", {
+      message: error.message,
+      stack: error.stack,
+    });
     return reply.status(500).send({
-      error: 'Internal Server Error',
-      message: 'Authentication failed',
+      error: "Internal Server Error",
+      message: "Authentication failed",
+      details: error.message,
     });
   }
 }

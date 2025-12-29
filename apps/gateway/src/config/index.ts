@@ -39,13 +39,13 @@ export function validateConfig() {
   const missing = required.filter(r => !r.value);
 
   if (missing.length > 0) {
-    console.error('❌ Missing required environment variables:');
+    console.error('Missing required environment variables:');
     missing.forEach(m => console.error(`   - ${m.name}`));
     process.exit(1);
   }
 
   // Warn if OpenAI key is missing (but don't fail)
   if (!config.openaiApiKey) {
-    console.warn('⚠️  OPENAI_API_KEY not set - using mock inference service');
+    console.warn('OPENAI_API_KEY not set. Using mock inference service');
   }
 }
